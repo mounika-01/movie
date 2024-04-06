@@ -7,6 +7,7 @@
  */
 
 package com.example.movie;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.movie.Movie;
@@ -33,76 +34,77 @@ public class MovieService implements MovieRepository {
     // Write your code here
     int uniqueId = 6;
 
-@Override
+    @Override
 
-public ArrayList<Movie> getMovies() {
-    Collection<Movie> movieCollection= movieList.values();
-    ArrayList<Movie> movies = new ArrayList<>(movieCollection);
-    
-    return movies;
+    public ArrayList<Movie> getMovies() {
+        Collection<Movie> movieCollection = movieList.values();
+        ArrayList<Movie> movies = new ArrayList<>(movieCollection);
+
+        return movies;
+    }
+
+    @Override
+
+    public Movie getMovieById(int movieId) {
+        Movie movie = movieList.get(movieId);
+
+        if (movie == null) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        }
+        return movie;
+    }
+
+    @Override
+    public Movie addMovie(Movie movie) {
+
+        movie.setMovieId(uniqueId);
+        movieList.put(uniqueId, movie);
+
+        uniqueId += 1;
+
+        return movie;
+
+    }
+
+    @Override
+
+    public Movie updateMovie(int movieId, Movie movie) {
+
+        Movie existingMovie = movieList.get(movieId);
+
+        if (existingMovie == null) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        if (movie.getMovieName() != null) {
+
+            existingMovie.setMovieName(movie.getMovieName());
+        }
+
+        if (movie.getLeadActor() != null) {
+
+            existingMovie.setLeadActor(movie.getLeadActor());
+        }
+
+        return existingMovie;
+
+    }
+
+    @Override
+
+    public void deleteMovie(int movieId) {
+
+        Movie movie = movieList.get(movieId);
+
+        if (movie == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else {
+            movieList.remove(movieId);
+            return new ResponseStatusException(HttpStatus.NO_CONTENT);
+
+        }
+    }
 }
-@Override
-
-public Movie getMovieById(int movieId) {
-    Movie movie= movieList.get(movieId);
-    
-    if (movie == null) {
-        
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-}
-return movie;
-}
-
-@Override
-public Movie addMovie(Movie movie) {
-
-movie.setMovieId(uniqueId);
- movieList.put(uniqueId, movie);
-
-uniqueId += 1;
-
-return movie;
-
-}
-
-@Override
-
-public Movie updateMovie(int movieId, Movie movie) {
-
-Movie existingMovie = movieList.get(movieId);
-
-if (existingMovie == null) {
-    throw new ResponseStatus Exception(HttpStatus.NOT_FOUND);
-}
-
-if (movie.getMovieName() != null) {
-
-existingMovie.setMovieName(novie.getMovieName());
-}
-
-if (movie.getLeadActor() != null) {
-
-existingMovie.setLeadActor(movie.getLeadActor());
-}
-
-return existingMovie;
-
-}
-
-@Override
-
-public void deleteMovie(int movieId) {
-
-Movie movie=movieList.get(movieId);
-
-if (movie ==null) {
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-}else {
-    movieList.remove(movieId);
-    throw new ResponseStatusException(HttpStatus.NOT_CONTENT);
-
-}
-}
-}
-
